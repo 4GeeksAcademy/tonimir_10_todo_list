@@ -24,7 +24,7 @@ const Home = () => {
   };
 
   const deleteTodo = (index) => {
-    const lista = todoList.filter((_, i) => i !== index);
+    const lista = todoList.filter((todo, i) => i !== index);
     setTodoList(lista);
   };
 
