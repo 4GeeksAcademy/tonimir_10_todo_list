@@ -36,7 +36,7 @@ const Home = () => {
         console.log(error);
     });
 
-//POST
+//POST TIENE QUE IR DENTRO DE HANDLECLICK!!
 
 const newTask = { label: input, done: false };
 
