@@ -13,6 +13,59 @@ const Home = () => {
     { task: 'Ver el Real Madrid', done: false }
   ]);
 
+  //API FETCH
+  // GET
+  fetch('https://playground.4geeks.com/todo/todos/alesanchezr', {
+      method: "GET",
+      //body: JSON.stringify(task),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    .then(resp => {
+        console.log(resp.ok); 
+        console.log(resp.status); 
+        return resp.json(); 
+    })
+    .then(data => {
+        setTodoList(data);
+        console.log(data); 
+    })
+    .catch(error => {
+       
+        console.log(error);
+    });
+
+//POST
+
+const newTask = { label: input, done: false };
+
+fetch("https://playground.4geeks.com/todo/todos/alesanchezr", {
+  method: "POST",
+  body: JSON.stringify(newTask),
+  headers: {
+    "Content-Type": "application/json",
+  },
+})
+  .then((resp) => {
+    if (!resp.ok) throw new Error("Error al agregar tarea");
+    return resp.json();
+  })
+  .then(() => {
+    return fetch("https://playground.4geeks.com/todo/todos/alesanchezr");
+  })
+  .then((resp) => resp.json())
+  .then((data) => {
+    setTodoList(data);
+    setInput("");
+  })
+  .catch((error) => {
+    console.error("Error en POST:", error);
+  });
+
+
+
+
   const handleChange = (e) => {
     setInput(e.target.value);
   };
