@@ -36,11 +36,11 @@ const Home = () => {
         console.log(error);
     });
 
-//POST TIENE QUE IR DENTRO DE HANDLECLICK!!
+//POST TIENE QUE IR DENTRO DE HANDLECLICK??
 
 const newTask = { label: input, done: false };
 
-fetch("https://playground.4geeks.com/todo/todos/alesanchezr", {
+fetch("https://playground.4geeks.com/todo/todos/tonimir10", {
   method: "POST",
   body: JSON.stringify(newTask),
   headers: {
@@ -52,7 +52,7 @@ fetch("https://playground.4geeks.com/todo/todos/alesanchezr", {
     return resp.json();
   })
   .then(() => {
-    return fetch("https://playground.4geeks.com/todo/todos/alesanchezr");
+    return fetch("https://playground.4geeks.com/todo/todos/tonimir10");
   })
   .then((resp) => resp.json())
   .then((data) => {
