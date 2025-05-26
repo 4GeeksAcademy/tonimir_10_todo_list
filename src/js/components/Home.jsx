@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 //include images into your bundle
 import rigoImage from "../../img/rigo-baby.jpg";
@@ -8,16 +8,14 @@ import rigoImage from "../../img/rigo-baby.jpg";
 
 const Home = () => {
   const [input, setInput] = useState("");
-  const [todoList, setTodoList] = useState([
-    { task: 'Repasar React', done: false },
-    { task: 'Ver el Real Madrid', done: false }
-  ]);
+  const [todoList, setTodoList] = useState([]);
 
   //API FETCH
+
+
   // GET
-  fetch('https://playground.4geeks.com/todo/todos/alesanchezr', {
+  const getTodo = () =>{fetch('https://playground.4geeks.com/todo/users/antonio', {
       method: "GET",
-      //body: JSON.stringify(task),
       headers: {
         "Content-Type": "application/json"
       }
@@ -28,19 +26,21 @@ const Home = () => {
         return resp.json(); 
     })
     .then(data => {
-        setTodoList(data);
+        setTodoList(data.todos);
         console.log(data); 
     })
     .catch(error => {
        
         console.log(error);
-    });
+    });} 
 
 //POST TIENE QUE IR DENTRO DE HANDLECLICK??
+const postToDo = () => {
+  const newTask = { label: input, is_done: false };
 
-const newTask = { label: input, done: false };
+  const newTodos = [...todoList, newTask];
 
-fetch("https://playground.4geeks.com/todo/todos/tonimir10", {
+fetch("https://playground.4geeks.com/todo/todos/antonio", {
   method: "POST",
   body: JSON.stringify(newTask),
   headers: {
@@ -51,19 +51,29 @@ fetch("https://playground.4geeks.com/todo/todos/tonimir10", {
     if (!resp.ok) throw new Error("Error al agregar tarea");
     return resp.json();
   })
-  .then(() => {
-    return fetch("https://playground.4geeks.com/todo/todos/tonimir10");
-  })
-  .then((resp) => resp.json())
+  
   .then((data) => {
-    setTodoList(data);
+    setTodoList(newTodos);
     setInput("");
+    getTodo();
   })
   .catch((error) => {
     console.error("Error en POST:", error);
   });
+}
 
 
+const deleteTodos = (id)  => {
+
+  fetch(`https://playground.4geeks.com/todo/todos/${id}`)
+
+
+}
+
+useEffect(() => {
+  getTodo();
+},
+ [])
 
 
   const handleChange = (e) => {
@@ -71,14 +81,25 @@ fetch("https://playground.4geeks.com/todo/todos/tonimir10", {
   };
 
   const handleClick = () => {
-    if (input.trim() === "") return;
-    setTodoList([...todoList, { task: input, done: false }]);
-    setInput("");
+   postToDo();
   };
 
-  const deleteTodo = (index) => {
-    const lista = todoList.filter((todo, i) => i !== index);
-    setTodoList(lista);
+  const deleteTodo = (id) => {
+   
+    fetch(`https://playground.4geeks.com/todo/todos/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+    .then((resp) => { 
+      getTodo();
+      
+    })
+     
+    .catch((error) => {
+      console.error("Error en DELETE:", error);
+    });
   };
 
   const doneTodo = (index) => {
@@ -105,10 +126,10 @@ fetch("https://playground.4geeks.com/todo/todos/tonimir10", {
         <ul>
           {todoList.map((todo, index) => (
             <li key={index}>
-              {todo.done ? <del>{todo.task}</del> : todo.task}
+             {todo.done ? <del>{todo.label}</del> : todo.label}
 			  <div>
               <button className="done-btn" onClick={() => doneTodo(index)}>🗹</button>
-              <button className="delete-btn" onClick={() => deleteTodo(index)}>X</button>
+              <button className="delete-btn" onClick={() => deleteTodo(todo.id)}>X</button>
 			  </div>
             </li>
           ))}
